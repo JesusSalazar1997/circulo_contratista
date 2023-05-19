@@ -1,0 +1,12 @@
+.login {
+  background-image: url("../../public/img/bg_log.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+.margin-left {
+  margin-left: 7.5rem;
+}
+.margin-left-li {
+  margin-left: 8.8rem;
+}
