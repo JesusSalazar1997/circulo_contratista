@@ -3,7 +3,6 @@ import { useState, useEffect, useLayoutEffect } from "react";
 import usePerfil from "../../hooks/usePerfil";
 import Alerta from "../Alerta";
 import clienteAxios from "../../../config/clienteAxios";
-import { atob } from "atob";
 
 const Documentos = () => {
 
@@ -104,20 +103,20 @@ const Documentos = () => {
 
     }
 
-    const arr = [];
-    documentacion.forEach((data) => {
-        // var variable = decodeURIComponent(window.atob(data.content));
-        let valor = data.content;
-        // console.log(valor)
-        // var variable = decodeURIComponent(window.atob(data.content));
-        // arr.push(variable)
-        "use strict";
+    // const arr = [];
+    // documentacion.forEach((data) => {
+    //     // var variable = decodeURIComponent(window.atob(data.content));
+    //     let valor = data.content;
+    //     // console.log(valor)
+    //     // var variable = decodeURIComponent(window.atob(data.content));
+    //     // arr.push(variable)
+    //     "use strict";
 
-        var atob = require('atob');
-        var bin = atob(valor);
+    //     var atob = require('atob');
+    //     var bin = atob(valor);
 
-        console.log(bin); // "Hello, World!"
-    })
+    //     console.log(bin); // "Hello, World!"
+    // })
 
 
 
