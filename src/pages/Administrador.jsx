@@ -5,9 +5,6 @@ const Administrador = () => {
 
     const { data } = usePerfil();
 
-
-
-
     return (
         <>
             <h1 className="text-2xl font-base text-center my-8">Listado Contratistas</h1>

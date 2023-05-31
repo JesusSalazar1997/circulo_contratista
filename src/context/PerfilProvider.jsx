@@ -10,7 +10,9 @@ const PerfilProvider = ({ children }) => {
     const [data, setData] = useState([]);
     const [nav, setNav] = useState(false);
     const [alerta, setAlerta] = useState([]);
-    // console.log(obras)
+    const [dataContAdm, setdataContAdm] = useState({})
+    const [contratista, setContratista] = useState('');
+
 
     const navigate = useNavigate();
 
@@ -25,8 +27,7 @@ const PerfilProvider = ({ children }) => {
                 console.log(error)
             }
         }
-        obtenerInformación()
-
+        obtenerInformación();
     }, [])
 
 
@@ -92,7 +93,29 @@ const PerfilProvider = ({ children }) => {
         }
     }
 
+    const obtenerData = async id => {
+        try {
+            const user = localStorage.getItem('username')
+            if (!user) return;
+            const { data } = await clienteAxios(`/Contratista/${id}`)
+            console.log(data)
+            setdataContAdm(data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
+
+    const obtenerContratista = async () => {
+        try {
+            const username = localStorage.getItem('username')
+            if (!username) return;
+            const { data } = await clienteAxios(`/Contratista/${username}`);
+            setContratista(data.id);
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
 
 
@@ -107,6 +130,10 @@ const PerfilProvider = ({ children }) => {
                 submitPerfil,
                 perfil,
                 obras,
+                dataContAdm,
+                obtenerData,
+                obtenerContratista,
+                contratista
             }}
         >
             {children}

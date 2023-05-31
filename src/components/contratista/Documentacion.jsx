@@ -1,8 +1,9 @@
-import NavSubcontratista from "../subcontratista/NavSubcontratista";
-import { useState } from "react";
+import NavContratitsa from "./NavContratista";
+import { useState, useEffect, useLayoutEffect } from "react";
 import usePerfil from "../../hooks/usePerfil";
 import Alerta from "../Alerta";
 import clienteAxios from "../../../config/clienteAxios";
+import { atob } from "atob";
 
 const Documentos = () => {
 
@@ -11,8 +12,34 @@ const Documentos = () => {
     const [convertir64, setConvertir64] = useState('');
     const [tipodocumento, setTipodocumento] = useState(parseInt('0'));
     const [selectHidden, setselectHidden] = useState(false);
+    const [documentacion, setDocumentacion] = useState([{}]);
     const tipodoc = parseInt(tipodocumento)
-    const { perfil, mostrarAlerta, alerta, } = usePerfil();
+    const { perfil, mostrarAlerta, alerta, obtenerContratista, contratista } = usePerfil();
+
+
+    useEffect(() => {
+        obtenerContratista();
+        if (contratista != '') {
+            const obtenerDocumentos = async () => {
+                try {
+                    const { data } = await clienteAxios(`/Documento/contratista/${contratista}`);
+                    console.log(data)
+                    setDocumentacion(data);
+                } catch (error) {
+                    console.log(error);
+                }
+            };
+            obtenerDocumentos();
+
+        }
+    }, [])
+
+    console.log(contratista)
+
+    console.log(documentacion)
+
+
+    // console.log(contratista);
 
 
     function changeInput() {
@@ -57,26 +84,17 @@ const Documentos = () => {
 
         const cantidad = parseInt(monto)
 
-        // let docs = {
-        //     "nombre": nombre,
-        //     "contratistaId": perfil.id,
-        //     "obraId": null,
-        //     "fecha": str,
-        //     "content": convertir64,
-        //     "monto": cantidad,
-        //     "estado": tipodoc
-        // }
         let docs = {
-            "contratistaId": "68d647d0-4cb8-4ba9-bde3-08db4478452d",
+            "nombre": nombre,
+            "contratistaId": contratista,
             "obraId": null,
-            "nombre": "Comprobante",
-            "fecha": "2023-05-13T23:16:09",
-            "estado": 0,
-            "monto": 0,
-            "content": "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"
+            "fecha": str,
+            "content": convertir64,
+            "monto": cantidad,
+            "estado": tipodoc
         }
-        console.log(docs);
-        const { data } = await clienteAxios.post('/Documento', { docs })
+
+        const { data } = await clienteAxios.post('/Documento', docs);
         console.log(data);
         mostrarAlerta({
             msg: 'Documento subido correctamente',
@@ -86,11 +104,29 @@ const Documentos = () => {
 
     }
 
+    const arr = [];
+    documentacion.forEach((data) => {
+        // var variable = decodeURIComponent(window.atob(data.content));
+        let valor = data.content;
+        // console.log(valor)
+        // var variable = decodeURIComponent(window.atob(data.content));
+        // arr.push(variable)
+        "use strict";
+
+        var atob = require('atob');
+        var bin = atob(valor);
+
+        console.log(bin); // "Hello, World!"
+    })
+
+
+
+
     const { msg } = alerta;
     return (
         <section className="mb-5">
             <h2 className="text-2xl font-base text-center mt-8">Documentación</h2>
-            <NavSubcontratista />
+            <NavContratitsa />
             {/* FORMULARIO ARCHIVOS */}
             < div
                 className="mt-8 bg-white py-8 px-5 h-max rounded-lg" >
@@ -159,6 +195,11 @@ const Documentos = () => {
                         />
                     </div>
                 </form>
+            </div>
+            <div className="mt-8 bg-white py-8 px-5 h-max rounded-lg">
+                <p className="bg-green-600 text-white font-semibold uppercase text-center mb-7 text-sm">Documentación de Contratista</p>
+
+
             </div>
         </section>
 

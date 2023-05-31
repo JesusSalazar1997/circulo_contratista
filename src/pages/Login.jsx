@@ -2,7 +2,7 @@ import { useState } from "react";
 import image from "../../public/img/logo.png";
 import log from "../../public/img/12.svg";
 import sec from "../../public/img/13.svg";
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Alerta from "../components/Alerta";
 import useAuth from "../hooks/useAuth";
 import clienteAxios from "../../config/clienteAxios";

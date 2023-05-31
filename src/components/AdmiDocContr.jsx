@@ -1,19 +1,18 @@
-import NavSubcontratista from "../subcontratista/NavSubcontratista";
+import NavInfoContra from "./NavInfoContra";
 import { useState } from "react";
-import usePerfil from "../../hooks/usePerfil";
-import Alerta from "../Alerta";
-import clienteAxios from "../../../config/clienteAxios";
+import usePerfil from "../hooks/usePerfil";
+import Alerta from "./Alerta";
+import clienteAxios from "../../config/clienteAxios";
 
-const DocumentosSubcontratista = () => {
+const AdmiDocContr = () => {
 
     const [nombre, setNombre] = useState('');
-    const [monto, setMonto] = useState('');
+    const [monto, setMonto] = useState(parseInt('0'));
     const [convertir64, setConvertir64] = useState('');
     const [tipodocumento, setTipodocumento] = useState(parseInt('0'));
     const [selectHidden, setselectHidden] = useState(false);
     const tipodoc = parseInt(tipodocumento)
     const { perfil, mostrarAlerta, alerta, } = usePerfil();
-    console.log(nombre);
 
 
     function changeInput() {
@@ -37,10 +36,14 @@ const DocumentosSubcontratista = () => {
             }
         })
     }
+    let date = new Date();
+    let fecha = date.toISOString();
+    const str = fecha.substring(0, fecha.length - 5);
     // console.log(convertirBase64(convertir64));
 
     const handlesubmit = async e => {
         e.preventDefault();
+
         if (nombre === '') {
             mostrarAlerta({
                 msg: 'Todos los Campos son Obligatorios',
@@ -51,17 +54,20 @@ const DocumentosSubcontratista = () => {
         if (monto === '') {
             setMonto('0');
         }
+
+        const cantidad = parseInt(monto)
+
         let docs = {
             "nombre": nombre,
             "contratistaId": perfil.id,
             "obraId": null,
-            "fecha": new Date().toLocaleDateString("es-ES"),
+            "fecha": str,
             "content": convertir64,
-            "monto": parseInt(monto),
+            "monto": cantidad,
             "estado": tipodoc
         }
-        console.log(docs);
 
+        console.log(docs);
         const { data } = await clienteAxios.post('/Documento', docs)
         console.log(data);
         mostrarAlerta({
@@ -74,9 +80,9 @@ const DocumentosSubcontratista = () => {
 
     const { msg } = alerta;
     return (
-        <section className="mb-10">
-            <h2 className="text-2xl font-base text-center mt-8">Documentación</h2>
-            <NavSubcontratista />
+        <section className="mb-5">
+            <h2 className="text-2xl font-base text-center mt-8 mb-2">Editar Documentación Contratista</h2>
+            <NavInfoContra />
             {/* FORMULARIO ARCHIVOS */}
             < div
                 className="mt-8 bg-white py-8 px-5 h-max rounded-lg" >
@@ -156,4 +162,4 @@ const DocumentosSubcontratista = () => {
     )
 }
 
-export default DocumentosSubcontratista
+export default AdmiDocContr

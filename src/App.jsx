@@ -21,13 +21,17 @@ import DocumentacionObra from "./components/contratista/DocumentacionObra";
 // Subcontratista
 import Subcontratista from "./pages/Subcontratista";
 import DocumentosSubcontratista from "./components/subcontratista/DocumentosSubcontratista";
-import FormularioInformacion from "./components/FormularioInformacion";
 
 // Administrador
 import Administrador from "./pages/Administrador";
 import ContratistaObras from "./components/ContratistaObras";
 import SubcontratistasObra from "./components/SubcontratistasObra";
-
+import FormularioEditar from "./components/FormularioEditar"
+import AdmiDocContr from "./components/AdmiDocContr";
+import FormularioEditarObra from "./components/FormularioEditarObra";
+import FormularioEditarSubcontratista from "./components/FormularioEditarSubcontratista";
+import AdmiDocContrObr from "./components/AdmiDocContrObr";
+import AdmiDocContrSub from "./components/AdmiDocContrSub";
 
 import { AuthProvider } from './context/AuthProvider';
 import { PerfilProvider } from './context/PerfilProvider';
@@ -62,7 +66,13 @@ function App() {
               <Route path="contratista-obras/:id" element={<ContratistaObras />} />
               <Route path="subcontratista-obra/:id" element={<SubcontratistasObra />} />
               <Route path="formulario-obra" element={<FormularioObra />} />
-              <Route path="formulario-informacion" element={<FormularioInformacion />} />
+              <Route path="formulario-editar-contratista/:id" element={<FormularioEditar />} />
+              <Route path="formulario-editar-contratista-documentacion/:id" element={<AdmiDocContr />} />
+              <Route path="formulario-editar-obra/:id" element={<FormularioEditarObra />} />
+              <Route path="formulario-editar-obra-documentacion/:id" element={<AdmiDocContrObr />} />
+              <Route path="formulario-editar-subcontratista/:id" element={<FormularioEditarSubcontratista />} />
+              <Route path="formulario-editar-subcontratista-documentacion/:id" element={<AdmiDocContrSub />} />
+
             </Route>
             <Route path="/contratista" element={<RutaProtegida />}>
               <Route index element={<Contratista />} />
