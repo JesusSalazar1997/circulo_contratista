@@ -11,7 +11,7 @@ const DocumentosSubcontratista = () => {
     const [convertir64, setConvertir64] = useState('');
     const [tipodocumento, setTipodocumento] = useState(parseInt('0'));
     const [selectHidden, setselectHidden] = useState(false);
-    const tipodoc = parseInt(tipodocumento)
+    const tipodoc = parseInt(tipodocumento);
     const { perfil, mostrarAlerta, alerta, } = usePerfil();
     console.log(nombre);
 

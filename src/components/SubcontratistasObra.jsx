@@ -15,7 +15,9 @@ const SubcontratistasObra = () => {
         const obtenerSubContratistas = async () => {
             try {
                 const username = localStorage.getItem('username')
-                if (!username) return;
+                if (!username) {
+                    return;
+                }
                 const { data } = await clienteAxios(`/Contratista/subcontratista/obra/${id}`);
                 // console.log(data)
                 setSubcontratista(data);
@@ -37,19 +39,15 @@ const SubcontratistasObra = () => {
         };
         obtenerObra();
 
-        construcciones.forEach(e => {
+        construcciones?.forEach(e => {
             if (id === e.id) {
                 setobraSeleccionada(e);
             } else {
                 return;
             }
         })
+
     }, [])
-
-
-
-    let idObra = construcciones.map((subcontratista) => subcontratista.id)
-
 
     return (
         <>
@@ -97,8 +95,8 @@ const SubcontratistasObra = () => {
                     </thead>
                     <tbody className="bg-white shadow">
                         {subcontratista?.length ? (
-                            subcontratista?.map((subcontratistas) => (
-                                <CampoSubcontratistas key={subcontratistas.id} subcontratistas={subcontratistas} />
+                            subcontratista?.map((subcontratistas, valor) => (
+                                <CampoSubcontratistas key={valor} subcontratistas={subcontratistas} />
                             ))
                         ) : (
                             <tr className="text-center">

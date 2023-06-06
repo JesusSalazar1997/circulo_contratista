@@ -122,6 +122,8 @@ const Subcontratista = () => {
 
 
 
+
+
     const handlesubmit = async e => {
         e.preventDefault();
         if ([Nombre, Telefono, NombreRazonSocial, CodigoObra, ObjetoSocial, Puesto, Email, Giro, RFC, Estado, Municipio, Colonia, Calle, CodigoPostal].includes('')) {
@@ -141,7 +143,6 @@ const Subcontratista = () => {
                     return;
                 }
                 const idob = data.obras;
-                console.log(idob)
                 const ObraId = idob.map(element => element.id);
                 // console.log(ObraId)
                 // return;
@@ -164,11 +165,6 @@ const Subcontratista = () => {
                 console.log(error);
             }
         }
-
-
-
-
-
     }
     const { msg } = alerta;
 
@@ -177,7 +173,9 @@ const Subcontratista = () => {
     return (
         <section>
             <h2 className="text-2xl font-base text-center mt-8">Información</h2>
-            <NavSubcontratista />
+            <div className={` justify-end w-full space-x-2 ${perfil ? 'block' : 'hidden'} `}>
+                <NavSubcontratista />
+            </div>
             <i className="fa fa-drivers-license-o" aria-hidden="true"></i>
             <div className={`${mensaje ? 'block' : 'hidden'}`}>
                 <p className={`mt-4 text-xl font-semibold text-center text-red-500`}>No hay información</p>

@@ -1,4 +1,4 @@
-import { useState, useEffect, createContext } from "react";
+import { useState, useEffect, useLayoutEffect, createContext } from "react";
 import clienteAxios from "../../config/clienteAxios";
 import { useNavigate } from "react-router-dom";
 
@@ -16,11 +16,11 @@ const PerfilProvider = ({ children }) => {
 
     const navigate = useNavigate();
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         const obtenerInformación = async () => {
             try {
                 const username = localStorage.getItem('username')
-                if (!username) return;
+                if (!username || username == "administrador@mail.com") return;
                 const { data } = await clienteAxios(`/Contratista/${username}`)
                 setPerfil(data)
             } catch (error) {
@@ -31,7 +31,7 @@ const PerfilProvider = ({ children }) => {
     }, [])
 
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         const obtenerObras = async () => {
             try {
                 const username = localStorage.getItem('username')

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 const CampoSubcontratistas = ({ subcontratistas }) => {
     const { nombreRazonSocial, objetoSocial, giro, usuarioUsername } = subcontratistas;
 
-    console.log(subcontratistas)
+    // console.log(subcontratistas)
 
     return (
         <tr className="text-center">
