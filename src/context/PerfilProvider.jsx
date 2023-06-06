@@ -1,4 +1,4 @@
-import { useState, useEffect, useLayoutEffect, createContext } from "react";
+import { useState, useEffect, createContext } from "react";
 import clienteAxios from "../../config/clienteAxios";
 import { useNavigate } from "react-router-dom";
 
@@ -16,7 +16,7 @@ const PerfilProvider = ({ children }) => {
 
     const navigate = useNavigate();
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         const obtenerInformación = async () => {
             try {
                 const username = localStorage.getItem('username')
@@ -31,7 +31,7 @@ const PerfilProvider = ({ children }) => {
     }, [])
 
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         const obtenerObras = async () => {
             try {
                 const username = localStorage.getItem('username')
