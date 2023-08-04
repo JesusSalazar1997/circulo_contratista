@@ -27,7 +27,6 @@ const Subcontratista = () => {
 
     const { mostrarAlerta, alerta, submitPerfil, perfil } = usePerfil();
 
-
     useLayoutEffect(() => {
         if (perfil?.id) {
             if (perfil.nombre === null) {
@@ -120,7 +119,10 @@ const Subcontratista = () => {
         }
     }, [])
 
-
+    let valor = false;
+    if (JSON.stringify(perfil) != '{}') {
+        valor = true;
+    }
 
 
 
@@ -135,17 +137,13 @@ const Subcontratista = () => {
         } else {
             try {
                 const { data } = await clienteAxios(`/Contratista/numeroRegistroObra/${CodigoObra}`)
-                if (!data.id) {
-                    setAlerta({ msg: 'El código de obra no existe', error: true });
-                    setTimeout(() => {
-                        setAlerta({});
-                    }, 3000);
-                    return;
-                }
                 const idob = data.obras;
-                const ObraId = idob.map(element => element.id);
-                // console.log(ObraId)
-                // return;
+                let ObraId;
+                idob.map(element => {
+                    if (CodigoObra == element.numeroRegistroObra) {
+                        return ObraId = element.id;
+                    }
+                });
                 const UsuarioUsername = localStorage.getItem('username');
                 let DireccionFiscal = {
                     "Calle": Calle,
@@ -159,10 +157,16 @@ const Subcontratista = () => {
                 // const objeto = { ObraId, UsuarioUsername, Nombre, Telefono, NombreRazonSocial, ObjetoSocial, RFC, Giro, Puesto, Email, Estado, Municipio, Colonia, Calle, CodigoPostal, DireccionFiscal }
 
                 // console.log(objeto)
+                // return;
                 await submitPerfil({ ObraId, UsuarioUsername, Nombre, Telefono, NombreRazonSocial, ObjetoSocial, RFC, Giro, Puesto, Email, Estado, Municipio, Colonia, Calle, CodigoPostal, DireccionFiscal })
 
             } catch (error) {
+                mostrarAlerta({ msg: 'El código de obra no existe', error: true });
+                setTimeout(() => {
+                    setAlerta({});
+                }, 3000);
                 console.log(error);
+                return;
             }
         }
     }
@@ -173,7 +177,7 @@ const Subcontratista = () => {
     return (
         <section>
             <h2 className="text-2xl font-base text-center mt-8">Información</h2>
-            <div className={` justify-end w-full space-x-2 ${perfil ? 'block' : 'hidden'} `}>
+            <div className={` justify-end w-full space-x-2 ${valor ? 'block' : 'hidden'} `}>
                 <NavSubcontratista />
             </div>
             <i className="fa fa-drivers-license-o" aria-hidden="true"></i>
@@ -182,7 +186,7 @@ const Subcontratista = () => {
                 <p className="text-sm text-red-600 text-center">Favor de llenar la información y subir la documentación</p>
             </div>
             <form
-                className=" rounded-lg bg-white py-8 px-5 mt-10"
+                className=" rounded-lg bg-white py-8 px-5 mt-10 mb-10"
                 onSubmit={handlesubmit}
             >
                 <div className="flex space-x-6">
@@ -456,17 +460,17 @@ const Subcontratista = () => {
                     </div>
                 </div>
                 {msg && <Alerta alerta={alerta} />}
-                <div className={` justify-end w-full space-x-2 ${perfil ? 'hidden' : 'flex'} `}>
+                <div className={` justify-end w-full space-x-2 ${valor ? 'hidden' : 'flex'} `}>
                     <input
                         type="submit"
                         value="Guardar"
-                        className="text-sm cursor-pointer bg-green-600 py-2 px-4 uppercase font-bold 
+                        className="text-sm cursor-pointer bg-green-600 py-2 px-4 uppercase font-bold
       text-white rounded hover:bg-green-700 transition-colors"
                     />
                     <input
                         type="submit"
                         value="Cancelar"
-                        className="text-sm cursor-pointer  bg-red-600 py-2 px-4 uppercase font-bold 
+                        className="text-sm cursor-pointer  bg-red-600 py-2 px-4 uppercase font-bold
       text-white rounded hover:bg-red-700 transition-colors"
                     />
                 </div>

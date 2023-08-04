@@ -19,10 +19,13 @@ const PerfilProvider = ({ children }) => {
     useEffect(() => {
         const obtenerInformación = async () => {
             try {
-                const username = localStorage.getItem('username')
-                if (!username || username == "administrador@mail.com") return;
-                const { data } = await clienteAxios(`/Contratista/${username}`)
-                setPerfil(data)
+                const username = localStorage.getItem('username');
+                if (!username || username == "administrador@mail.com") {
+                    return;
+                } else {
+                    const { data } = await clienteAxios(`/Contratista/${username}`)
+                    setPerfil(data)
+                }
             } catch (error) {
                 console.log(error)
             }
@@ -69,7 +72,7 @@ const PerfilProvider = ({ children }) => {
             })
             setTimeout(() => {
                 setAlerta({})
-                navigate("/perfil/informacion")
+                navigate("/")
             }, 3000);
         } catch (error) {
             console.log(error)
@@ -127,6 +130,7 @@ const PerfilProvider = ({ children }) => {
                 nav,
                 mostrarAlerta,
                 alerta,
+                setAlerta,
                 submitPerfil,
                 perfil,
                 obras,

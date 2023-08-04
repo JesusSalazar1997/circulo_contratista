@@ -1,18 +1,21 @@
-import NavDocObr from "./NavDocObr";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import usePerfil from "../../hooks/usePerfil";
 import Alerta from "../Alerta";
+import clienteAxios from "../../../config/clienteAxios";
+import { useParams } from "react-router-dom";
+
 
 const DocumentacionObra = () => {
 
+    const { id } = useParams();
     const [nombre, setNombre] = useState('');
     const [monto, setMonto] = useState(parseInt('0'));
     const [convertir64, setConvertir64] = useState('');
     const [tipodocumento, setTipodocumento] = useState(parseInt('0'));
     const [selectHidden, setselectHidden] = useState(false);
+    const [formatoDocumento, setformatoDocumento] = useState("");
     const tipodoc = parseInt(tipodocumento)
     const { perfil, mostrarAlerta, alerta, } = usePerfil();
-
 
     function changeInput() {
         if (tipodoc === 1) {
@@ -23,6 +26,9 @@ const DocumentacionObra = () => {
     }
 
     const convertirBase64 = (archivos) => {
+        let val = archivos[0]["name"];
+        let formato = val.split('.')[1];
+        setformatoDocumento('.' + formato);
         Array.from(archivos).forEach(archivo => {
             let reader = new FileReader();
             reader.readAsDataURL(archivo);
@@ -30,6 +36,7 @@ const DocumentacionObra = () => {
                 let arrayAuxiliar = [];
                 let base64 = reader.result;
                 arrayAuxiliar = base64.split(',');
+                // console.log(arrayAuxiliar[1])
                 setConvertir64(arrayAuxiliar[1])
             }
         })
@@ -37,12 +44,11 @@ const DocumentacionObra = () => {
     let date = new Date();
     let fecha = date.toISOString();
     const str = fecha.substring(0, fecha.length - 5);
-    // console.log(convertirBase64(convertir64));
 
     const handlesubmit = async e => {
         e.preventDefault();
 
-        if (nombre === '') {
+        if (nombre == '' || convertir64 == '') {
             mostrarAlerta({
                 msg: 'Todos los Campos son Obligatorios',
                 error: true
@@ -58,14 +64,14 @@ const DocumentacionObra = () => {
         let docs = {
             "nombre": nombre,
             "contratistaId": null,
-            "obraId": null,
+            "obraId": id,
             "fecha": str,
             "content": convertir64,
             "monto": cantidad,
-            "estado": tipodoc
+            "estado": tipodoc,
+            "extension": formatoDocumento
         }
 
-        console.log(docs);
         const { data } = await clienteAxios.post('/Documento', docs)
         console.log(data);
         mostrarAlerta({
@@ -73,14 +79,29 @@ const DocumentacionObra = () => {
             error: false
         })
         return
-
     }
+    useEffect(() => {
+        const obtenerDocumentacion = async () => {
+            try {
+                const username = localStorage.getItem('username')
+                if (!username) return;
+                const { data } = await clienteAxios(`/Documento/obra/${id}`);
+                // console.log(data)
+                setSubcontratista(data);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        obtenerDocumentacion();
+
+    }, [])
+
+
 
     const { msg } = alerta;
     return (
         <section className="mb-5">
             <h2 className="text-2xl font-base text-center mt-8">Documentación Obra</h2>
-            <NavDocObr />
             {/* FORMULARIO ARCHIVOS */}
             < div
                 className="mt-8 bg-white py-8 px-5 h-max rounded-lg" >
@@ -150,11 +171,7 @@ const DocumentacionObra = () => {
                     </div>
                 </form>
             </div>
-            <div className="mt-8 bg-white py-8 px-5 h-max rounded-lg">
-                <p className="bg-green-600 text-white font-semibold uppercase text-center mb-7 text-sm">Documentación de Contratista</p>
 
-
-            </div>
         </section>
     )
 }

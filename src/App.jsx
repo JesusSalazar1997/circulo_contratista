@@ -79,7 +79,7 @@ function App() {
               <Route path="configuracion" element={<Configuracion />} />
               <Route path="informacion" element={<Informacion />} />
               <Route path="documentacion" element={<Documentacion />} />
-              <Route path="documentacion-obra" element={<DocumentacionObra />} />
+              <Route path="documentacion-obra/:id" element={<DocumentacionObra />} />
               <Route path="subcontratistas-obra/:id" element={<ListaSubcontratistas />} />
               <Route path="obra" element={<FormularioObra />} />
             </Route>

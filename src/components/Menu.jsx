@@ -17,6 +17,7 @@ const Menu = () => {
     const handleCerrarSesion = () => {
         cerrarSesion()
         localStorage.removeItem('username');
+        localStorage.removeItem('tipoUsuario');
         navigate('')
     }
 

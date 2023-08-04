@@ -11,36 +11,28 @@ const Documentos = () => {
     const [convertir64, setConvertir64] = useState('');
     const [tipodocumento, setTipodocumento] = useState(parseInt('0'));
     const [selectHidden, setselectHidden] = useState(false);
-    const [documentacion, setDocumentacion] = useState([{}]);
+    const [formatoDocumento, setformatoDocumento] = useState("");
+    // const [documentacion, setDocumentacion] = useState([{}]);
     const tipodoc = parseInt(tipodocumento)
     const { perfil, mostrarAlerta, alerta, obtenerContratista, contratista } = usePerfil();
 
 
-    useEffect(() => {
-        obtenerContratista();
-        if (contratista != '') {
-            const obtenerDocumentos = async () => {
-                try {
-                    const { data } = await clienteAxios(`/Documento/contratista/${contratista}`);
-                    console.log(data)
-                    setDocumentacion(data);
-                } catch (error) {
-                    console.log(error);
-                }
-            };
-            obtenerDocumentos();
+    // useEffect(() => {
+    //     obtenerContratista();
+    //     if (contratista != '') {
+    //         const obtenerDocumentos = async () => {
+    //             try {
+    //                 const { data } = await clienteAxios(`/Documento/contratista/${contratista}`);
+    //                 console.log(data)
+    //                 setDocumentacion(data);
+    //             } catch (error) {
+    //                 console.log(error);
+    //             }
+    //         };
+    //         obtenerDocumentos();
 
-        }
-    }, [])
-
-    console.log(contratista)
-
-    console.log(documentacion)
-
-
-    // console.log(contratista);
-
-
+    //     }
+    // }, []);
     function changeInput() {
         if (tipodoc === 1) {
             setselectHidden(true)
@@ -49,7 +41,11 @@ const Documentos = () => {
         }
     }
 
+
     const convertirBase64 = (archivos) => {
+        let val = archivos[0]["name"];
+        let formato = val.split('.')[1];
+        setformatoDocumento('.' + formato);
         Array.from(archivos).forEach(archivo => {
             let reader = new FileReader();
             reader.readAsDataURL(archivo);
@@ -57,7 +53,7 @@ const Documentos = () => {
                 let arrayAuxiliar = [];
                 let base64 = reader.result;
                 arrayAuxiliar = base64.split(',');
-                console.log(arrayAuxiliar[1])
+                // console.log(arrayAuxiliar[1])
                 setConvertir64(arrayAuxiliar[1])
             }
         })
@@ -65,8 +61,13 @@ const Documentos = () => {
     let date = new Date();
     let fecha = date.toISOString();
     const str = fecha.substring(0, fecha.length - 5);
-    // console.log(convertirBase64(convertir64));
 
+    if (monto === '') {
+        setMonto('0');
+    }
+    const cantidad = parseInt(monto)
+
+    console.log(perfil);
     const handlesubmit = async e => {
         e.preventDefault();
 
@@ -77,24 +78,18 @@ const Documentos = () => {
             })
             return
         }
-        if (monto === '') {
-            setMonto('0');
-        }
-
-        const cantidad = parseInt(monto)
-
         let docs = {
             "nombre": nombre,
-            "contratistaId": contratista,
+            "contratistaId": perfil.id,
             "obraId": null,
             "fecha": str,
             "content": convertir64,
             "monto": cantidad,
-            "estado": tipodoc
+            "estado": tipodoc,
+            "extension": formatoDocumento
         }
 
         const { data } = await clienteAxios.post('/Documento', docs);
-        console.log(data);
         mostrarAlerta({
             msg: 'Documento subido correctamente',
             error: false
@@ -102,26 +97,10 @@ const Documentos = () => {
         return
 
     }
-
-    // const arr = [];
-    // documentacion.forEach((data) => {
-    //     // var variable = decodeURIComponent(window.atob(data.content));
-    //     let valor = data.content;
-    //     // console.log(valor)
-    //     // var variable = decodeURIComponent(window.atob(data.content));
-    //     // arr.push(variable)
-    //     "use strict";
-
-    //     var atob = require('atob');
-    //     var bin = atob(valor);
-
-    //     console.log(bin); // "Hello, World!"
-    // })
-
-
-
-
+    let documentacion = perfil.documentos;
     const { msg } = alerta;
+
+
     return (
         <section className="mb-5">
             <h2 className="text-2xl font-base text-center mt-8">Documentación</h2>
@@ -196,9 +175,14 @@ const Documentos = () => {
                 </form>
             </div>
             <div className="mt-8 bg-white py-8 px-5 h-max rounded-lg">
-                <p className="bg-green-600 text-white font-semibold uppercase text-center mb-7 text-sm">Documentación de Contratista</p>
-
-
+                <p className="bg-cyan-600 text-white font-semibold uppercase text-center mb-7 text-sm">Documentación de Subcontratista</p>
+                {
+                    documentacion?.map((doc) => (
+                        <div key={doc.id} className="flex justify-between mt-2">
+                            <p>{doc.nombre}{doc.extension}</p>
+                            <a className="hover:bg-green-700 bg-green-600 rounded-md px-4 py-2 text-white font-semibold uppercase text-sm" href={`data:application/octet-stream;base64,${doc.content}`} download={`${doc.nombre}` + `${doc.extension}`}>Descargar</a>
+                        </div>
+                    ))}
             </div>
         </section>
 

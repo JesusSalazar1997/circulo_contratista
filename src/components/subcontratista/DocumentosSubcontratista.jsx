@@ -3,7 +3,6 @@ import { useState } from "react";
 import usePerfil from "../../hooks/usePerfil";
 import Alerta from "../Alerta";
 import clienteAxios from "../../../config/clienteAxios";
-// import { downloadjs } from ""
 
 const DocumentosSubcontratista = () => {
 
@@ -12,9 +11,9 @@ const DocumentosSubcontratista = () => {
     const [convertir64, setConvertir64] = useState('');
     const [tipodocumento, setTipodocumento] = useState(parseInt('0'));
     const [selectHidden, setselectHidden] = useState(false);
+    const [formatoDocumento, setformatoDocumento] = useState("");
     const tipodoc = parseInt(tipodocumento);
     const { perfil, mostrarAlerta, alerta, } = usePerfil();
-    console.log(nombre);
 
 
     function changeInput() {
@@ -26,6 +25,9 @@ const DocumentosSubcontratista = () => {
     }
 
     const convertirBase64 = (archivos) => {
+        let val = archivos[0]["name"];
+        let formato = val.split('.')[1];
+        setformatoDocumento('.' + formato);
         Array.from(archivos).forEach(archivo => {
             let reader = new FileReader();
             reader.readAsDataURL(archivo);
@@ -33,12 +35,19 @@ const DocumentosSubcontratista = () => {
                 let arrayAuxiliar = [];
                 let base64 = reader.result;
                 arrayAuxiliar = base64.split(',');
-                console.log(arrayAuxiliar[1])
                 setConvertir64(arrayAuxiliar[1])
             }
         })
     }
-    // console.log(convertirBase64(convertir64));
+    let date = new Date();
+    let fecha = date.toISOString();
+    const str = fecha.substring(0, fecha.length - 5);
+
+    if (monto === '') {
+        setMonto('0');
+    }
+
+    const cantidad = parseInt(monto)
 
     const handlesubmit = async e => {
         e.preventDefault();
@@ -49,43 +58,44 @@ const DocumentosSubcontratista = () => {
             })
             return
         }
-        if (monto === '') {
-            setMonto('0');
-        }
+
         let docs = {
             "nombre": nombre,
             "contratistaId": perfil.id,
             "obraId": null,
-            "fecha": new Date().toLocaleDateString("es-ES"),
+            "fecha": str,
             "content": convertir64,
-            "monto": parseInt(monto),
-            "estado": tipodoc
+            "monto": cantidad,
+            "estado": tipodoc,
+            "extension": formatoDocumento
         }
-        console.log(docs);
 
         const { data } = await clienteAxios.post('/Documento', docs)
-        console.log(data);
         mostrarAlerta({
             msg: 'Documento subido correctamente',
             error: false
         })
-        return
+
 
     }
-
+    let documentacion = perfil.documentos;
     const { msg } = alerta;
     return (
+
         <section className="mb-10">
             <h2 className="text-2xl font-base text-center mt-8">Documentación</h2>
             <NavSubcontratista />
             {/* FORMULARIO ARCHIVOS */}
             < div
                 className="mt-8 bg-white py-8 px-5 h-max rounded-lg" >
+
                 <form
                     onSubmit={handlesubmit}
                 >
 
                     <p className="text-xl text-sky-500 font-semibold mt-2 mb-4">Documentos Subcontratista</p>
+                    <p className="text-gray-600 font-semibold mb-7 text-xs">Se deberá subir documentación en formato PDF</p>
+
                     <div className="grid grid-cols-2 gap-2">
                         <div className="mb-5">
                             <label
@@ -148,9 +158,14 @@ const DocumentosSubcontratista = () => {
                 </form>
             </div>
             <div className="mt-8 bg-white py-8 px-5 h-max rounded-lg">
-                <p className="bg-green-600 text-white font-semibold uppercase text-center mb-7 text-sm">Documentación de Contratista</p>
-
-
+                <p className="bg-cyan-600 text-white font-semibold uppercase text-center mb-7 text-sm">Documentación de Subcontratista</p>
+                {
+                    documentacion?.map((doc) => (
+                        <div key={doc.id} className="flex justify-between mt-2">
+                            <p>{doc.nombre}{doc.extension}</p>
+                            <a className="hover:bg-green-700 bg-green-600 rounded-md px-4 py-2 text-white font-semibold uppercase text-sm" href={`data:application/octet-stream;base64,${doc.content}`} download={`${doc.nombre}` + `${doc.extension}`}>Descargar</a>
+                        </div>
+                    ))}
             </div>
         </section>
 

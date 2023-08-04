@@ -22,6 +22,15 @@ const InformacionSubcontratista = () => {
     }, [])
 
 
+    let valor = false;
+    if (JSON.stringify(datos) != '{}') {
+        valor = true;
+    }
+
+
+
+    let documentacion = datos.documentos;
+
 
     return (
         <div>
@@ -100,21 +109,22 @@ const InformacionSubcontratista = () => {
                 </div>
             </section>
             <section className="my-8 w-full h-max bg-white shadow-md rounded-md pt-4">
-                <h2 className="text-lg mb-8 font-bold text-center">Documentos Subcontratista</h2>
-                <div className="mx-4">
-                    <div className="flex space-x-2">
-                        <div className="w-1/2">
-                            <p className="bg-green-600 pl-3 py-1 text-md text-white font-semibold">Comprobante</p>
-                            <p className="text-gray-700 my-2 ml-2">Pago</p>
-                        </div>
-                        <div className="w-1/2">
-                            <p className="bg-green-600 pl-3 py-1 text-md text-white font-semibold">Identifiación</p>
-                            <p className="text-gray-700 my-2 ml-2">INE</p>
-                        </div>
+                <div className=" bg-white py-4 px-5 h-max rounded-lg">
+                    <p className="bg-green-600 text-white font-semibold uppercase text-center mb-7 text-sm">Documentación de Subcontratista</p>
+                    {
+                        documentacion?.map((doc) => (
+                            <div key={doc.id} className="flex justify-between mt-2 hover:bg-gray-200">
+                                <p className="text-sky-800 font-semibold pt-1 pl-1">{doc.nombre}{doc.extension}</p>
+                                <a className="hover:bg-green-700 bg-green-600 rounded-md px-4 py-2 text-white font-semibold uppercase text-sm" href={`data:application/octet-stream;base64,${doc.content}`} download={`${doc.nombre}` + `${doc.extension}`}>Descargar</a>
+                            </div>
+                        ))}
+                    <div className={`w-full justify-center ${valor ? 'flex' : 'hidden'}`}>
+                        <p className="text-center font-semibold text-gray-500" >No hay documentos</p>
                     </div>
+
                 </div>
-            </section>
-        </div>
+            </section >
+        </div >
     )
 }
 
