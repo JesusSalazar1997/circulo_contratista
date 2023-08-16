@@ -35,17 +35,19 @@ const FormularioEditarObra = () => {
     const Documentos = null;
 
     useEffect(() => {
-        const obtenerInformación = async () => {
+
+        const obtenerObra = async () => {
             try {
                 const username = localStorage.getItem('username')
-                if (!username) return
-                const { data } = await clienteAxios(`/Contratista/${username}`)
-                setContratistaId(data.id)
+                if (!username) return;
+                const { data } = await clienteAxios(`/Obra/${id}`);
+                // console.log(data)
+                setobraSeleccionada(data);
             } catch (error) {
-                console.log(error)
+                console.log(error);
             }
-        }
-        obtenerInformación()
+        };
+        obtenerObra();
 
     }, [])
 

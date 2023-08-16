@@ -29,7 +29,7 @@ const Registrar = () => {
   const handleSubmit = async e => {
     e.preventDefault();
 
-    // console.log(tipousuario)
+
     if ([username, password, repertirPassword, tipousuario].includes('')) {
 
       setAlerta({ msg: 'Todos los campos son obligatorios', error: true });
@@ -63,7 +63,7 @@ const Registrar = () => {
         setAlerta({});
       }, 3000);
       return
-    } else {
+    } else if (tipousuario === 1) {
       try {
         let estatus = 1;
         const { data } = await clienteAxios(`/Contratista/numeroRegistroObra/${codigoObra}`)
@@ -93,8 +93,8 @@ const Registrar = () => {
       } catch (error) {
         console.log(error)
       }
-    }
-    if (tipousuario === 0) {
+    } else if (tipousuario === 0) {
+
       //Crear el Usuario en la Api
       try {
         let estatus = 0;

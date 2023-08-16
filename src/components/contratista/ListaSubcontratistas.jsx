@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import clienteAxios from "../../../config/clienteAxios";
 import CampoSubcontratistas from "./CampoSubcontratistas";
 import { Link } from "react-router-dom";
-
+import dayjs from "dayjs";
 
 const ListaSubcontratistas = () => {
 
@@ -64,8 +64,8 @@ const ListaSubcontratistas = () => {
 
     let idObra = construcciones.map((subcontratista) => subcontratista.id)
 
-
-
+    let fechaFormateadaInicio = dayjs(obraSeleccionada.fechaInicio).format("DD/MM/YYYY");
+    let fechaFormateadaFin = dayjs(obraSeleccionada.fechaTermino).format("DD/MM/YYYY");
 
     return (
         <>
@@ -80,8 +80,8 @@ const ListaSubcontratistas = () => {
                         <p className="mb-2 font-semibold">Monto de la Obra: $<span className="font-normal ">{obraSeleccionada.montoContrato}</span> </p>
                     </div>
                     <div>
-                        <p className="mb-2 font-semibold">Fecha de Inicio: <span className="font-normal "> {obraSeleccionada.fechaInicio}</span> </p>
-                        <p className="mb-2 font-semibold">Fecha de Termino: <span className="font-normal "> {obraSeleccionada.fechaTermino}</span> </p>
+                        <p className="mb-2 font-semibold">Fecha de Inicio: <span className="font-normal "> {fechaFormateadaInicio}</span> </p>
+                        <p className="mb-2 font-semibold">Fecha de Termino: <span className="font-normal "> {fechaFormateadaFin}</span> </p>
                     </div>
                 </div>
 
@@ -124,7 +124,7 @@ const ListaSubcontratistas = () => {
                         ) : (
                             <tr className="text-center">
                                 <td className="font-semibold"></td>
-                                <td COLSPAN="2" className="col-span-4 text-center text-gray-600 uppercase p-5">
+                                <td colSpan="2" className="col-span-4 text-center text-gray-600 uppercase p-5">
                                     No hay Subcontratistas para Esta Obra
                                 </td>
                                 <td className="font-semibold"></td>

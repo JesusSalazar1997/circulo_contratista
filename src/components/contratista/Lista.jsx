@@ -5,7 +5,6 @@ const Lista = ({ construcciones }) => {
     const obras = construcciones.obras;
 
 
-
     return (
         <div className="flex justify-center">
             <table className="w-full drop-shadow-md ">
@@ -24,12 +23,9 @@ const Lista = ({ construcciones }) => {
                         ))
                     ) : (
                         <tr className="text-center">
-                            <td className="py-4 font-semibold"></td>
-                            <td className="text-center text-gray-600 uppercase p-5">
-                                No hay obras aún
+                            <td colSpan="4" className="text-center text-gray-600 uppercase p-5">
+                                No hay obras
                             </td>
-                            <td className="py-4 font-semibold"></td>
-                            <td className="py-4 font-semibold"></td>
                         </tr>
                     )
                     }

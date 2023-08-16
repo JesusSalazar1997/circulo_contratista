@@ -78,6 +78,8 @@ const AdmiDocContr = () => {
 
     }
 
+
+
     const { msg } = alerta;
     return (
         <section className="mb-5">

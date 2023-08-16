@@ -71,6 +71,7 @@ const DocumentacionObra = () => {
             "estado": tipodoc,
             "extension": formatoDocumento
         }
+        console.log(docs);
 
         const { data } = await clienteAxios.post('/Documento', docs)
         console.log(data);
@@ -80,21 +81,7 @@ const DocumentacionObra = () => {
         })
         return
     }
-    useEffect(() => {
-        const obtenerDocumentacion = async () => {
-            try {
-                const username = localStorage.getItem('username')
-                if (!username) return;
-                const { data } = await clienteAxios(`/Documento/obra/${id}`);
-                // console.log(data)
-                setSubcontratista(data);
-            } catch (error) {
-                console.log(error);
-            }
-        };
-        obtenerDocumentacion();
 
-    }, [])
 
 
 

@@ -17,13 +17,14 @@ const PerfilProvider = ({ children }) => {
     const navigate = useNavigate();
 
     useEffect(() => {
+        const username = localStorage.getItem('username');
         const obtenerInformación = async () => {
             try {
-                const username = localStorage.getItem('username');
                 if (!username || username == "administrador@mail.com") {
                     return;
                 } else {
                     const { data } = await clienteAxios(`/Contratista/${username}`)
+                    // console.log(data);
                     setPerfil(data)
                 }
             } catch (error) {
@@ -31,10 +32,6 @@ const PerfilProvider = ({ children }) => {
             }
         }
         obtenerInformación();
-    }, [])
-
-
-    useEffect(() => {
         const obtenerObras = async () => {
             try {
                 const username = localStorage.getItem('username')
@@ -51,7 +48,9 @@ const PerfilProvider = ({ children }) => {
             }
         };
         obtenerObras();
-    }, []);
+    }, [])
+
+
 
     const mostrarAlerta = alerta => {
         setAlerta(alerta)
@@ -60,8 +59,7 @@ const PerfilProvider = ({ children }) => {
         }, 3000);
     }
 
-    const submitPerfil = async perfil => {
-
+    const submitPerfil = async (perfil, location) => {
         try {
             const username = localStorage.getItem('username')
             if (!username) return
@@ -72,7 +70,7 @@ const PerfilProvider = ({ children }) => {
             })
             setTimeout(() => {
                 setAlerta({})
-                navigate("/")
+                navigate(location)
             }, 3000);
         } catch (error) {
             console.log(error)
@@ -101,7 +99,6 @@ const PerfilProvider = ({ children }) => {
             const user = localStorage.getItem('username')
             if (!user) return;
             const { data } = await clienteAxios(`/Contratista/${id}`)
-            console.log(data)
             setdataContAdm(data)
         } catch (error) {
             console.log(error)
@@ -121,6 +118,25 @@ const PerfilProvider = ({ children }) => {
     };
 
 
+    const eliminarUsuario = async (usuarioUsername, location) => {
+        try {
+            const username = localStorage.getItem('username')
+            if (!username) return;
+
+            const { data } = await clienteAxios.delete(`/Usuario/${usuarioUsername}`);
+            //Sincronizar el state
+            setAlerta({
+                msg: data.msg,
+                error: false,
+            });
+            setTimeout(() => {
+                setAlerta({});
+                navigate(location);
+            }, 3000);
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     return (
         <PerfilContext.Provider
@@ -137,7 +153,8 @@ const PerfilProvider = ({ children }) => {
                 dataContAdm,
                 obtenerData,
                 obtenerContratista,
-                contratista
+                contratista,
+                eliminarUsuario
             }}
         >
             {children}

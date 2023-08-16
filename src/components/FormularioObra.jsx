@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import usePerfil from "../hooks/usePerfil";
 import Alerta from "./Alerta";
 import clienteAxios from "../../config/clienteAxios";
@@ -30,6 +30,8 @@ const FormularioObra = () => {
 
     const { mostrarAlerta, alerta, setAlerta } = usePerfil();
 
+    const navigate = useNavigate();
+
     const SuperficieObraMetros = parseInt(ObraMetros);
     const MontoContrato = parseInt(CantidadContrato);
     const Documentos = null;
@@ -50,7 +52,6 @@ const FormularioObra = () => {
     }, [])
 
 
-
     const handlesubmit = async e => {
         e.preventDefault();
         if ([NumeroRegistroObra, Delegacion, FechaRegistro, FechaInicio, FechaTermino, MontoContrato, TipoObra, ObraContratada, NumeroRegistroObraPropietario, ClaseObra, FolioRepse, SuperficieObraMetros, Estado, Municipio, Colonia, Calle, CodigoPostal].includes('')) {
@@ -66,12 +67,13 @@ const FormularioObra = () => {
 
             // const objeto = { ContratistaId, NumeroRegistroObra, Delegacion, Subdelegacion, FechaRegistro, FechaInicio, FechaTermino, MontoContrato, ObraContratada, NumeroRegistroObraPropietario, ClaseObra, FolioRepse, SuperficieObraMetros, Direccion, Documentos };
             // console.log(objeto);
+            // return
             const { data } = await clienteAxios.post(`/Obra`, { ContratistaId, NumeroRegistroObra, Delegacion, Subdelegacion, FechaRegistro, FechaInicio, FechaTermino, MontoContrato, ObraContratada, NumeroRegistroObraPropietario, ClaseObra, FolioRepse, SuperficieObraMetros, Direccion, Documentos, TipoObra })
-            console.log(data);
             setAlerta({ msg: 'La obra se creo correctamente', error: true });
             setTimeout(() => {
                 setAlerta({})
             }, 2000);
+            navigate("/contratista");
         } catch (error) {
             console.log(error)
         }

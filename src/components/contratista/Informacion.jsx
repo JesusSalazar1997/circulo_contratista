@@ -2,7 +2,9 @@ import { useState, useLayoutEffect } from "react";
 import usePerfil from "../../hooks/usePerfil";
 import NavContratista from "./NavContratista";
 import clienteAxios from "../../../config/clienteAxios";
+import { useNavigate } from "react-router-dom";
 import Alerta from "../Alerta";
+
 
 
 
@@ -25,9 +27,10 @@ const Informacion = () => {
     const [CodigoPostal, setCodigoPostal] = useState('');
     const [CodigoObra, setCodigoObra] = useState('');
     const [mensaje, setMensaje] = useState(false);
-
+    const navigate = useNavigate();
     const { mostrarAlerta, alerta, submitPerfil, perfil } = usePerfil();
-    // console.log(perfil);
+
+
 
 
     useLayoutEffect(() => {
@@ -126,7 +129,9 @@ const Informacion = () => {
 
     const handlesubmit = async e => {
         e.preventDefault();
-        if ([Nombre, Telefono, NombreRazonSocial, CodigoObra, ObjetoSocial, Puesto, Email, Giro, RFC, Estado, Municipio, Colonia, Calle, CodigoPostal].includes('')) {
+
+
+        if ([Nombre, Telefono, NombreRazonSocial, ObjetoSocial, Puesto, Email, Giro, RFC, Estado, Municipio, Colonia, Calle, CodigoPostal].includes('')) {
             mostrarAlerta({
                 msg: 'Todos los Campos son Obligatorios',
                 error: true
@@ -134,17 +139,17 @@ const Informacion = () => {
             return
         } else {
             try {
-                const { data } = await clienteAxios(`/Contratista/numeroRegistroObra/${CodigoObra}`)
-                if (!data.id) {
-                    setAlerta({ msg: 'El código de obra no existe', error: true });
-                    setTimeout(() => {
-                        setAlerta({});
-                    }, 3000);
-                    return;
-                }
-                const idob = data.obras;
-                console.log(idob)
-                const ObraId = idob.map(element => element.id);
+
+                // const { data } = await clienteAxios(`/Contratista/numeroRegistroObra/${CodigoObra}`)
+                // if (!data.id) {
+                //     setAlerta({ msg: 'El código de obra no existe', error: true });
+                //     setTimeout(() => {
+                //         setAlerta({});
+                //     }, 3000);
+                //     return;
+                // }
+                // const idob = data.obras;
+                // const ObraId = idob.map(element => element.id);
                 // console.log(ObraId)
                 // return;
                 const UsuarioUsername = localStorage.getItem('username');
@@ -157,21 +162,24 @@ const Informacion = () => {
                     "Estado": Estado,
                     "CodigoPostal": CodigoPostal
                 }
-                // const objeto = { ObraId, UsuarioUsername, Nombre, Telefono, NombreRazonSocial, ObjetoSocial, RFC, Giro, Puesto, Email, Estado, Municipio, Colonia, Calle, CodigoPostal, DireccionFiscal }
+                // const objeto = {ObraId, UsuarioUsername, Nombre, Telefono, NombreRazonSocial, ObjetoSocial, RFC, Giro, Puesto, Email, Estado, Municipio, Colonia, Calle, CodigoPostal, DireccionFiscal }
 
-                // console.log(objeto)
-                await submitPerfil({ ObraId, UsuarioUsername, Nombre, Telefono, NombreRazonSocial, ObjetoSocial, RFC, Giro, Puesto, Email, Estado, Municipio, Colonia, Calle, CodigoPostal, DireccionFiscal })
+                await submitPerfil({ UsuarioUsername, Nombre, Telefono, NombreRazonSocial, ObjetoSocial, RFC, Giro, Puesto, Email, Estado, Municipio, Colonia, Calle, CodigoPostal, DireccionFiscal }, location)
+                navigate("/contratista/informacion");
 
             } catch (error) {
                 console.log(error);
             }
         }
-
-
-
-
-
     }
+
+
+    let valor = false;
+    if (JSON.stringify(perfil) != '[]') {
+        valor = true;
+    }
+
+
     const { msg } = alerta;
 
 
@@ -223,7 +231,7 @@ const Informacion = () => {
                                 onChange={(e) => setTelefono(e.target.value)}
                             />
                         </div>
-                        <div className="mb-5">
+                        {/* <div className="mb-5">
                             <label
                                 className="text-gray-700 uppercase font-bold text-sm"
                                 htmlFor="numerodeobra"
@@ -238,7 +246,7 @@ const Informacion = () => {
                                 value={CodigoObra}
                                 onChange={(e) => setCodigoObra(e.target.value)}
                             />
-                        </div>
+                        </div> */}
 
                         <p className="text-xl text-sky-500 font-semibold mt-8 mb-4">Información de la Empresa</p>
                         <div className="mb-5">
@@ -460,17 +468,17 @@ const Informacion = () => {
                 </div>
                 {msg && <Alerta alerta={alerta} />}
 
-                <div className={` justify-end w-full space-x-2 flex  ${perfil ? 'hidden' : 'flex'} `}>
+                <div className={` justify-end w-full space-x-2 flex  ${valor ? 'hidden' : 'flex'} `}>
                     <input
                         type="submit"
                         value="Guardar"
-                        className="text-sm cursor-pointer bg-green-600 py-2 px-4 uppercase font-bold 
+                        className="text-sm cursor-pointer bg-green-600 py-2 px-4 uppercase font-bold
       text-white rounded hover:bg-green-700 transition-colors"
                     />
                     <input
                         type="submit"
                         value="Cancelar"
-                        className="text-sm cursor-pointer  bg-red-600 py-2 px-4 uppercase font-bold 
+                        className="text-sm cursor-pointer  bg-red-600 py-2 px-4 uppercase font-bold
       text-white rounded hover:bg-red-700 transition-colors"
                     />
                 </div>

@@ -1,10 +1,24 @@
 import { Link } from "react-router-dom";
+import usePerfil from "../hooks/usePerfil";
+import { useLocation } from "react-router-dom";
 
 const Campo = ({ data }) => {
 
     const { nombreRazonSocial, objetoSocial, giro, usuarioUsername } = data;
+    const { eliminarUsuario } = usePerfil();
+
+    const location = useLocation().pathname;
 
 
+
+    const handleClick = () => {
+        if (confirm("¿Estas seguro de eliminar este usuario?")) {
+            console.log(usuarioUsername);
+            return
+            eliminarUsuario(usuarioUsername, location);
+
+        }
+    };
 
 
     return (
@@ -19,7 +33,7 @@ const Campo = ({ data }) => {
                 <Link to={`/administrador/formulario-editar-contratista/${usuarioUsername}`} >
                     <button className="drop-shadow-sm w-full py-2 px-1 bg-yellow-500 hover:bg-yellow-600 text-white text-base font-semibold rounded-lg">Editar</button>
                 </Link>
-                <button className="drop-shadow-sm py-2 px-1 bg-red-500 hover:bg-red-600 text-white text-base font-semibold rounded-lg">Eliminar</button>
+                <button onClick={handleClick} className="drop-shadow-sm py-2 px-1 bg-red-500 hover:bg-red-600 text-white text-base font-semibold rounded-lg">Eliminar</button>
             </td>
         </tr>
     )

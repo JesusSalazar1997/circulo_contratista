@@ -9,8 +9,7 @@ import { useParams } from "react-router-dom";
 const FormularioEditar = () => {
 
     const { id } = useParams();
-    const { dataContAdm, obtenerData } = usePerfil();
-    const { mostrarAlerta, alerta, submitPerfil } = usePerfil();
+    const { dataContAdm, obtenerData, mostrarAlerta, alerta, setAlerta } = usePerfil();
     const [Nombre, setNombre] = useState('');
     const [Telefono, setTelefono] = useState('');
     const [NombreRazonSocial, setNombreRazonSocial] = useState('');
@@ -26,15 +25,18 @@ const FormularioEditar = () => {
     const [NumeroExterior, setNumeroExterior] = useState('');
     const [NumeroInterior, setNumeroInterior] = useState('');
     const [CodigoPostal, setCodigoPostal] = useState('');
-    const [CodigoObra, setCodigoObra] = useState('');
+    const [UsuarioUsername, setUsuarioUsername] = useState('');
+    const [Id, setId] = useState('');
     const [mensaje, setMensaje] = useState(false);
+
 
 
     useEffect(() => {
         obtenerData(id);
         let perfil = dataContAdm;
-        console.log(perfil);
         if (perfil) {
+            setUsuarioUsername(perfil.usuarioUsername)
+            setId(perfil.id)
             setNombre(perfil.nombre)
             setTelefono(perfil.telefono)
             setNombreRazonSocial(perfil.nombreRazonSocial)
@@ -98,15 +100,15 @@ const FormularioEditar = () => {
     if (CodigoPostal === null) {
         setCodigoPostal('')
     };
-    if (CodigoObra === null) {
-        setCodigoObra('')
-    };
+    // if (CodigoObra === null) {
+    //     setCodigoObra('')
+    // };
 
 
 
     const handlesubmit = async e => {
         e.preventDefault();
-        if ([Nombre, Telefono, NombreRazonSocial, CodigoObra, ObjetoSocial, Puesto, Email, Giro, RFC, Estado, Municipio, Colonia, Calle, CodigoPostal].includes('')) {
+        if ([Nombre, Telefono, NombreRazonSocial, ObjetoSocial, Puesto, Email, Giro, RFC, Estado, Municipio, Colonia, Calle, CodigoPostal].includes('')) {
             mostrarAlerta({
                 msg: 'Todos los Campos son Obligatorios',
                 error: true
@@ -114,44 +116,36 @@ const FormularioEditar = () => {
             return
         } else {
             try {
-                const { data } = await clienteAxios(`/Contratista/numeroRegistroObra/${CodigoObra}`)
+
+                // let DireccionFiscal = {
+                //     "Calle": Calle,
+                //     "NumeroExterior": NumeroExterior,
+                //     "NumeroInterior": NumeroInterior,
+                //     "Colonia": Colonia,
+                //     "Municipio": Municipio,
+                //     "Estado": Estado,
+                //     "CodigoPostal": CodigoPostal
+                // }
+
+                const objeto = { "patronId": null, "direccionFiscal": null, 'usuario': null, 'id': Id, 'usuarioUsername': UsuarioUsername, 'nombre': Nombre, 'telefono': Telefono, 'nombreRazonSocial': NombreRazonSocial, 'objetoSocial': ObjetoSocial, 'rfc': RFC, 'giro': Giro, 'puesto': Puesto, 'email': Email }
+
+
+                const { data } = await clienteAxios.put(`/Contratista/${Id}`, objeto)
                 if (!data.id) {
-                    setAlerta({ msg: 'El código de obra no existe', error: true });
+                    setAlerta({ msg: 'Usuario Actualizado Correctamente', error: false });
                     setTimeout(() => {
                         setAlerta({});
                     }, 3000);
                     return;
                 }
-                const idob = data.obras;
-                console.log(idob)
-                const ObraId = idob.map(element => element.id);
-                // console.log(ObraId)
-                // return;
-                const UsuarioUsername = localStorage.getItem('username');
-                let DireccionFiscal = {
-                    "Calle": Calle,
-                    "NumeroExterior": NumeroExterior,
-                    "NumeroInterior": NumeroInterior,
-                    "Colonia": Colonia,
-                    "Municipio": Municipio,
-                    "Estado": Estado,
-                    "CodigoPostal": CodigoPostal
-                }
-                // const objeto = { ObraId, UsuarioUsername, Nombre, Telefono, NombreRazonSocial, ObjetoSocial, RFC, Giro, Puesto, Email, Estado, Municipio, Colonia, Calle, CodigoPostal, DireccionFiscal }
-
-                // console.log(objeto)
-                await submitPerfil({ ObraId, UsuarioUsername, Nombre, Telefono, NombreRazonSocial, ObjetoSocial, RFC, Giro, Puesto, Email, Estado, Municipio, Colonia, Calle, CodigoPostal, DireccionFiscal })
-
             } catch (error) {
                 console.log(error);
             }
         }
-
-
-
-
-
     }
+
+
+
     const { msg } = alerta;
 
 
@@ -201,7 +195,7 @@ const FormularioEditar = () => {
                                 onChange={(e) => setTelefono(e.target.value)}
                             />
                         </div>
-                        <div className="mb-5">
+                        {/* <div className="mb-5">
                             <label
                                 className="text-gray-700 uppercase font-bold text-sm"
                                 htmlFor="numerodeobra"
@@ -216,7 +210,7 @@ const FormularioEditar = () => {
                                 value={CodigoObra}
                                 onChange={(e) => setCodigoObra(e.target.value)}
                             />
-                        </div>
+                        </div> */}
 
                         <p className="text-xl text-sky-500 font-semibold mt-8 mb-4">Información de la Empresa</p>
                         <div className="mb-5">

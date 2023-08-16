@@ -67,7 +67,7 @@ const Documentos = () => {
     }
     const cantidad = parseInt(monto)
 
-    console.log(perfil);
+    // console.log(perfil);
     const handlesubmit = async e => {
         e.preventDefault();
 
@@ -98,6 +98,11 @@ const Documentos = () => {
 
     }
     let documentacion = perfil.documentos;
+
+    let valor = false;
+    if (JSON.stringify(documentacion) != '[]') {
+        valor = true;
+    }
     const { msg } = alerta;
 
 
@@ -112,7 +117,7 @@ const Documentos = () => {
                     onSubmit={handlesubmit}
                 >
 
-                    <p className="text-xl text-sky-500 font-semibold mt-2 mb-4">Documentos Subcontratista</p>
+                    <p className="text-xl text-sky-500 font-semibold mt-2 mb-4">Documentos Contratista</p>
                     <div className="grid grid-cols-2 gap-2">
                         <div className="mb-5">
                             <label
@@ -175,7 +180,7 @@ const Documentos = () => {
                 </form>
             </div>
             <div className="mt-8 bg-white py-8 px-5 h-max rounded-lg">
-                <p className="bg-cyan-600 text-white font-semibold uppercase text-center mb-7 text-sm">Documentación de Subcontratista</p>
+                <p className="bg-cyan-600 text-white font-semibold uppercase text-center mb-7 text-sm">Documentación de Contratista</p>
                 {
                     documentacion?.map((doc) => (
                         <div key={doc.id} className="flex justify-between mt-2">
@@ -183,6 +188,9 @@ const Documentos = () => {
                             <a className="hover:bg-green-700 bg-green-600 rounded-md px-4 py-2 text-white font-semibold uppercase text-sm" href={`data:application/octet-stream;base64,${doc.content}`} download={`${doc.nombre}` + `${doc.extension}`}>Descargar</a>
                         </div>
                     ))}
+                <div className={`w-full justify-center ${valor ? 'hidden' : 'flex'}`}>
+                    <p className="text-center font-semibold text-gray-500 uppercase" >No hay documentos</p>
+                </div>
             </div>
         </section>
 

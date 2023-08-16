@@ -3,6 +3,7 @@ import usePerfil from "../../src/hooks/usePerfil";
 import NavSubcontratista from "../components/subcontratista/NavSubcontratista";
 import Alerta from "../components/Alerta";
 import clienteAxios from "../../config/clienteAxios";
+import { useNavigate } from "react-router-dom";
 
 const Subcontratista = () => {
 
@@ -24,7 +25,7 @@ const Subcontratista = () => {
     const [CodigoPostal, setCodigoPostal] = useState('');
     const [CodigoObra, setCodigoObra] = useState('');
     const [mensaje, setMensaje] = useState(false);
-
+    const navigate = useNavigate();
     const { mostrarAlerta, alerta, submitPerfil, perfil } = usePerfil();
 
     useLayoutEffect(() => {
@@ -120,7 +121,7 @@ const Subcontratista = () => {
     }, [])
 
     let valor = false;
-    if (JSON.stringify(perfil) != '{}') {
+    if (JSON.stringify(perfil) != '[]') {
         valor = true;
     }
 
@@ -158,8 +159,8 @@ const Subcontratista = () => {
 
                 // console.log(objeto)
                 // return;
-                await submitPerfil({ ObraId, UsuarioUsername, Nombre, Telefono, NombreRazonSocial, ObjetoSocial, RFC, Giro, Puesto, Email, Estado, Municipio, Colonia, Calle, CodigoPostal, DireccionFiscal })
-
+                await submitPerfil({ ObraId, UsuarioUsername, Nombre, Telefono, NombreRazonSocial, ObjetoSocial, RFC, Giro, Puesto, Email, Estado, Municipio, Colonia, Calle, CodigoPostal, DireccionFiscal }, location)
+                navigate("/subcontratista")
             } catch (error) {
                 mostrarAlerta({ msg: 'El código de obra no existe', error: true });
                 setTimeout(() => {

@@ -25,12 +25,9 @@ const Administrador = () => {
                             ))
                         ) : (
                             <tr className="text-center">
-                                <td className="py-4 font-semibold"></td>
-                                <td className="text-center text-gray-600 uppercase p-5">
-                                    No hay obras aún
+                                <td colSpan="4" className="text-center text-gray-600 uppercase p-5">
+                                    No hay contratistas
                                 </td>
-                                <td className="py-4 font-semibold"></td>
-                                <td className="py-4 font-semibold"></td>
                             </tr>
                         )
                         }

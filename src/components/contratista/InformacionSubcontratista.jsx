@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useState, useLayoutEffect } from "react";
+import { useState, useLayoutEffect, useEffect } from "react";
 import clienteAxios from "../../../config/clienteAxios";
 
 
@@ -7,6 +7,8 @@ const InformacionSubcontratista = () => {
     const params = useParams();
     const { id } = params;
     const [datos, setDatos] = useState([{}]);
+    const [documentos, setDocumentos] = useState([{}]);
+
 
     useLayoutEffect(() => {
         const obtenerInformación = async () => {
@@ -22,15 +24,32 @@ const InformacionSubcontratista = () => {
     }, [])
 
 
+    useEffect(() => {
+
+        const obtenerDocumentoSubcontratista = async () => {
+            try {
+                const username = localStorage.getItem('username')
+                if (!username) return;
+                const { data } = await clienteAxios(`/Documento/contratista/${datos.id}`);
+                // console.log(data)
+                setDocumentos(data);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        obtenerDocumentoSubcontratista();
+    }, [datos])
+
+
+    let documentacion = documentos;
+
+
+
+
     let valor = false;
-    if (JSON.stringify(datos) != '{}') {
+    if (JSON.stringify(documentacion) != '[]') {
         valor = true;
     }
-
-
-
-    let documentacion = datos.documentos;
-
 
     return (
         <div>
@@ -110,7 +129,7 @@ const InformacionSubcontratista = () => {
             </section>
             <section className="my-8 w-full h-max bg-white shadow-md rounded-md pt-4">
                 <div className=" bg-white py-4 px-5 h-max rounded-lg">
-                    <p className="bg-green-600 text-white font-semibold uppercase text-center mb-7 text-sm">Documentación de Subcontratista</p>
+                    <p className="bg-green-600 text-white font-semibold uppercase text-center mb-4 text-sm">Documentación de Subcontratista</p>
                     {
                         documentacion?.map((doc) => (
                             <div key={doc.id} className="flex justify-between mt-2 hover:bg-gray-200">
@@ -118,7 +137,7 @@ const InformacionSubcontratista = () => {
                                 <a className="hover:bg-green-700 bg-green-600 rounded-md px-4 py-2 text-white font-semibold uppercase text-sm" href={`data:application/octet-stream;base64,${doc.content}`} download={`${doc.nombre}` + `${doc.extension}`}>Descargar</a>
                             </div>
                         ))}
-                    <div className={`w-full justify-center ${valor ? 'flex' : 'hidden'}`}>
+                    <div className={`w-full justify-center ${valor ? 'hidden' : 'display'}`}>
                         <p className="text-center font-semibold text-gray-500" >No hay documentos</p>
                     </div>
 

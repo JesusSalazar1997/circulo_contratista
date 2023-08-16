@@ -15,7 +15,6 @@ const DocumentosSubcontratista = () => {
     const tipodoc = parseInt(tipodocumento);
     const { perfil, mostrarAlerta, alerta, } = usePerfil();
 
-
     function changeInput() {
         if (tipodoc === 1) {
             setselectHidden(true)
@@ -75,10 +74,13 @@ const DocumentosSubcontratista = () => {
             msg: 'Documento subido correctamente',
             error: false
         })
-
-
     }
     let documentacion = perfil.documentos;
+
+    let valor = false;
+    if (JSON.stringify(documentacion) != '[]') {
+        valor = true;
+    }
     const { msg } = alerta;
     return (
 
@@ -166,6 +168,9 @@ const DocumentosSubcontratista = () => {
                             <a className="hover:bg-green-700 bg-green-600 rounded-md px-4 py-2 text-white font-semibold uppercase text-sm" href={`data:application/octet-stream;base64,${doc.content}`} download={`${doc.nombre}` + `${doc.extension}`}>Descargar</a>
                         </div>
                     ))}
+                <div className={`w-full justify-center ${valor ? 'hidden' : 'flex'}`}>
+                    <p className="text-center font-semibold text-gray-500 uppercase" >No hay documentos</p>
+                </div>
             </div>
         </section>
 

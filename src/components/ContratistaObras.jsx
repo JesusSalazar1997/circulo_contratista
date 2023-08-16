@@ -7,25 +7,46 @@ import CampoObrasContra from "./CampoObrasContra"
 const ContratistaObras = () => {
 
     const [obras, setObras] = useState([{}]);
-
+    const [documentos, setDocumentos] = useState([{}]);
     let obrasContr = obras.obras;
     const { id } = useParams();
 
     useEffect(() => {
-        const obtenerSubContratistas = async () => {
+        const obtenerObras = async () => {
             try {
                 const username = localStorage.getItem('username')
                 if (!username) return;
                 const { data } = await clienteAxios(`/Contratista/${id}`);
-                // console.log(data)
                 setObras(data);
             } catch (error) {
                 console.log(error);
             }
         };
-        obtenerSubContratistas();
+        obtenerObras();
+
+    }, [setObras])
+
+
+    useEffect(() => {
+        const obtenerDocumentacion = async () => {
+            try {
+                const username = localStorage.getItem('username')
+                if (!username) return;
+                const { data } = await clienteAxios(`/Documento/contratista/${obras.id}`);
+                setDocumentos(data);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        obtenerDocumentacion();
     }, [])
 
+    let documentacion = documentos;
+
+    let valor = false;
+    if (JSON.stringify(documentacion) != '[]') {
+        valor = true;
+    }
 
 
 
@@ -35,7 +56,7 @@ const ContratistaObras = () => {
                 <p className="text-center text-3xl font-semibold my-8">{obras.nombreRazonSocial}</p>
             </div>
             <section className="w-full shadow-md border bg-white py-7 px-5">
-                <p className="font-bold uppercase text-center mb-7 text-md">Información de Contratista</p>
+                <p className="bg-sky-500 text-white font-semibold uppercase text-center mb-7 text-md">Información Contratista</p>
                 <div className="grid grid-cols-2">
                     <div>
                         <p className="mb-2 font-semibold">Objeto Social: <span className="font-normal ">  {obras.objetoSocial}</span></p>
@@ -47,19 +68,17 @@ const ContratistaObras = () => {
                     </div>
                 </div>
             </section>
-            <section className="my-8 w-full h-max bg-white shadow-md rounded-md pt-4">
-                <h2 className="text-lg mb-8 font-bold text-center">Documentos Contratista</h2>
-                <div className="mx-4">
-                    <div className="flex space-x-2">
-                        <div className="w-1/2">
-                            <p className="bg-green-600 pl-3 py-1 text-md text-white font-semibold">Comprobante</p>
-                            <p className="text-gray-700 my-2 ml-2">Pago</p>
+            <section className="my-8 w-full h-max bg-white shadow-md rounded-md py-7 px-5">
+                <h2 className="bg-green-600 text-white font-semibold uppercase text-center mb-7 text-md">Documentos Contratista</h2>
+                {
+                    documentacion?.map((doc, index) => (
+                        <div key={index} className="flex justify-between mt-2">
+                            <p>{doc?.nombre}{doc?.extension}</p>
+                            <a className="hover:bg-green-700 bg-green-600 rounded-md px-4 py-2 text-white font-semibold uppercase text-sm" href={`data:application/octet-stream;base64,${doc.content}`} download={`${doc.nombre}` + `${doc.extension}`}>Descargar</a>
                         </div>
-                        <div className="w-1/2">
-                            <p className="bg-green-600 pl-3 py-1 text-md text-white font-semibold">Identifiación</p>
-                            <p className="text-gray-700 my-2 ml-2">INE</p>
-                        </div>
-                    </div>
+                    ))}
+                <div className={`w-full justify-center ${valor ? 'hidden' : 'display'}`}>
+                    <p className="text-center font-semibold text-gray-500 uppercase" >No hay documentos</p>
                 </div>
             </section>
             <p className="font-semibold mt-8 text-lg text-center mb-7">Listado Obras</p>
@@ -75,17 +94,14 @@ const ContratistaObras = () => {
                     </thead>
                     <tbody className="bg-white shadow">
                         {obrasContr?.length ? (
-                            obrasContr?.map((construccion) => (
-                                <CampoObrasContra key={construccion.id} construccion={construccion} idObra={construccion.id} />
+                            obrasContr?.map((construccion, index) => (
+                                <CampoObrasContra key={index} construccion={construccion} idObra={construccion?.id} />
                             ))
                         ) : (
                             <tr className="text-center">
-                                <td className="py-4 font-semibold"></td>
-                                <td className="text-center text-gray-600 uppercase p-5">
-                                    No hay obras aún
+                                <td colSpan="4" className="text-center text-gray-600 uppercase p-5">
+                                    No hay obras
                                 </td>
-                                <td className="py-4 font-semibold"></td>
-                                <td className="py-4 font-semibold"></td>
                             </tr>
                         )
                         }

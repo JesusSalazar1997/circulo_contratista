@@ -67,9 +67,7 @@ const AdmiDocContrObr = () => {
             "estado": tipodoc
         }
 
-        console.log(docs);
         const { data } = await clienteAxios.post('/Documento', docs)
-        console.log(data);
         mostrarAlerta({
             msg: 'Documento subido correctamente',
             error: false
