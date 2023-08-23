@@ -73,7 +73,7 @@ const ListaSubcontratistas = () => {
                 <p className="text-center text-3xl font-semibold my-8">{perfil.nombreRazonSocial}</p>
             </div>
             <section className="w-full shadow-md border bg-white py-7 px-5">
-                <p className="font-bold uppercase text-center mb-7 text-md">Información de Obra</p>
+                <p className="bg-sky-500 text-white font-semibold uppercase text-center mb-7 text-md">Información de Obra</p>
                 <div className="grid grid-cols-2">
                     <div>
                         <p className="mb-2 font-semibold">Numero de Registro de Obra: <span className="font-normal ">  {obraSeleccionada.numeroRegistroObra}</span></p>
@@ -87,7 +87,7 @@ const ListaSubcontratistas = () => {
 
             </section>
             <div className="mt-8 bg-white py-8 px-5 h-max rounded-lg">
-                <p className="bg-cyan-600 text-white font-semibold uppercase text-center mb-7 text-sm">Documentación de Obra</p>
+                <h2 className="bg-green-600 text-white font-semibold uppercase text-center mb-7 text-md">Documentación de Obra</h2>
 
                 {
                     documentacion?.map((doc) => (

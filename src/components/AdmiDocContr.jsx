@@ -153,11 +153,11 @@ const AdmiDocContr = () => {
                     </div>
                 </form>
             </div>
-            <div className="mt-8 bg-white py-8 px-5 h-max rounded-lg">
+            {/* <div className="mt-8 bg-white py-8 px-5 h-max rounded-lg">
                 <p className="bg-green-600 text-white font-semibold uppercase text-center mb-7 text-sm">Documentación de Contratista</p>
 
 
-            </div>
+            </div> */}
         </section>
 
     )

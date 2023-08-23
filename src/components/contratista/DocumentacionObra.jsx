@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import usePerfil from "../../hooks/usePerfil";
 import Alerta from "../Alerta";
 import clienteAxios from "../../../config/clienteAxios";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import Loading from "../../components/loading/Loading";
 
 
 const DocumentacionObra = () => {
@@ -15,7 +16,9 @@ const DocumentacionObra = () => {
     const [selectHidden, setselectHidden] = useState(false);
     const [formatoDocumento, setformatoDocumento] = useState("");
     const tipodoc = parseInt(tipodocumento)
-    const { perfil, mostrarAlerta, alerta, } = usePerfil();
+    const { setAlerta, alerta, loading, setLoading } = usePerfil();
+    const navigate = useNavigate();
+
 
     function changeInput() {
         if (tipodoc === 1) {
@@ -71,15 +74,15 @@ const DocumentacionObra = () => {
             "estado": tipodoc,
             "extension": formatoDocumento
         }
-        console.log(docs);
 
         const { data } = await clienteAxios.post('/Documento', docs)
-        console.log(data);
-        mostrarAlerta({
-            msg: 'Documento subido correctamente',
-            error: false
-        })
-        return
+        setLoading(true)
+        setAlerta({ msg: 'Documento subido correctamente', error: false });
+        setTimeout(() => {
+            setLoading(false)
+        }, 2000);
+        navigate(`/contratista/subcontratistas-obra/${id}`);
+
     }
 
 
@@ -87,79 +90,82 @@ const DocumentacionObra = () => {
 
     const { msg } = alerta;
     return (
-        <section className="mb-5">
-            <h2 className="text-2xl font-base text-center mt-8">Documentación Obra</h2>
-            {/* FORMULARIO ARCHIVOS */}
-            < div
-                className="mt-8 bg-white py-8 px-5 h-max rounded-lg" >
-                <form
-                    onSubmit={handlesubmit}
-                >
+        <>
+            {<Loading load={loading} />}
+            <section className="mb-5">
+                <h2 className="text-2xl font-base text-center mt-8">Documentación Obra</h2>
+                {/* FORMULARIO ARCHIVOS */}
+                < div
+                    className="mt-8 bg-white py-8 px-5 h-max rounded-lg" >
+                    <form
+                        onSubmit={handlesubmit}
+                    >
 
-                    <p className="text-xl text-sky-500 font-semibold mt-2 mb-4">Documentos Obra</p>
-                    <div className="grid grid-cols-2 gap-2">
+                        <p className="text-xl text-sky-500 font-semibold mt-2 mb-4">Documentos Obra</p>
+                        <div className="grid grid-cols-2 gap-2">
+                            <div className="mb-5">
+                                <label
+                                    className="text-gray-700 uppercase font-bold text-sm"
+                                    htmlFor="nombre"
+                                >
+                                    Nombre Documento
+                                </label>
+                                <input
+                                    id="nombre"
+                                    type="text"
+                                    className="border w-full p-2 mt-2 placeholder-gray-400 rounded-md shadow"
+                                    placeholder="Nombre Documento"
+                                    value={nombre}
+                                    onChange={e => setNombre(e.target.value)}
+                                />
+                            </div>
+                            <div className="mb-5">
+                                <label className="text-gray-700 uppercase font-bold text-sm">Tipo </label>
+                                <select onClick={changeInput} name="tipodocumento" value={tipodocumento}
+                                    className="border rounded-md shadow  p-2 mt-2  w-full" onChange={e => setTipodocumento(e.target.value)}>
+                                    <option value="0">Identificación</option>
+                                    <option value="1">Comprobante</option>
+                                </select>
+                            </div>
+                            <div className={`${selectHidden ? 'display' : 'hidden'} mb-2 inline`}>
+                                <label htmlFor="monto" className="text-gray-700 uppercase font-bold text-sm">Ingrese el Monto</label>
+                                <input id="monto" type="text" placeholder="Monto" className=" mt-1.5 px-2 py-1 border w-full" onChange={e => setMonto(e.target.value)} />
+                            </div>
+                        </div>
                         <div className="mb-5">
                             <label
                                 className="text-gray-700 uppercase font-bold text-sm"
                                 htmlFor="nombre"
                             >
-                                Nombre Documento
+                                Documento
                             </label>
                             <input
-                                id="nombre"
-                                type="text"
-                                className="border w-full p-2 mt-2 placeholder-gray-400 rounded-md shadow"
-                                placeholder="Nombre Documento"
-                                value={nombre}
-                                onChange={e => setNombre(e.target.value)}
+                                id="content"
+                                type="file"
+                                className="border w-full p-2 mt-1.5 placeholder-gray-400 rounded-md shadow"
+                                onChange={(e) => convertirBase64(e.target.files)}
                             />
                         </div>
-                        <div className="mb-5">
-                            <label className="text-gray-700 uppercase font-bold text-sm">Tipo </label>
-                            <select onClick={changeInput} name="tipodocumento" value={tipodocumento}
-                                className="border rounded-md shadow  p-2 mt-2  w-full" onChange={e => setTipodocumento(e.target.value)}>
-                                <option value="0">Identificación</option>
-                                <option value="1">Comprobante</option>
-                            </select>
-                        </div>
-                        <div className={`${selectHidden ? 'display' : 'hidden'} mb-2 inline`}>
-                            <label htmlFor="monto" className="text-gray-700 uppercase font-bold text-sm">Ingrese el Monto</label>
-                            <input id="monto" type="text" placeholder="Monto" className=" mt-1.5 px-2 py-1 border w-full" onChange={e => setMonto(e.target.value)} />
-                        </div>
-                    </div>
-                    <div className="mb-5">
-                        <label
-                            className="text-gray-700 uppercase font-bold text-sm"
-                            htmlFor="nombre"
-                        >
-                            Documento
-                        </label>
-                        <input
-                            id="content"
-                            type="file"
-                            className="border w-full p-2 mt-1.5 placeholder-gray-400 rounded-md shadow"
-                            onChange={(e) => convertirBase64(e.target.files)}
-                        />
-                    </div>
-                    {msg && <Alerta alerta={alerta} />}
-                    <div className="flex justify-end space-x-2">
-                        <input
-                            type="submit"
-                            value="Guardar"
-                            className="cursor-pointer text-sm bg-green-600 py-2 px-4 uppercase font-bold
+                        {msg && <Alerta alerta={alerta} />}
+                        <div className="flex justify-end space-x-2">
+                            <input
+                                type="submit"
+                                value="Guardar"
+                                className="cursor-pointer text-sm bg-green-600 py-2 px-4 uppercase font-bold
       text-white rounded hover:bg-green-700 transition-colors"
-                        />
-                        <input
-                            type="submit"
-                            value="Cancelar"
-                            className="cursor-pointer text-sm bg-red-600 py-2 px-4 uppercase font-bold
+                            />
+                            <input
+                                type="submit"
+                                value="Cancelar"
+                                className="cursor-pointer text-sm bg-red-600 py-2 px-4 uppercase font-bold
       text-white rounded hover:bg-red-700 transition-colors"
-                        />
-                    </div>
-                </form>
-            </div>
+                            />
+                        </div>
+                    </form>
+                </div>
 
-        </section>
+            </section>
+        </>
     )
 }
 
