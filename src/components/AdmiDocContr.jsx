@@ -67,7 +67,6 @@ const AdmiDocContr = () => {
             "estado": tipodoc
         }
 
-        console.log(docs);
         const { data } = await clienteAxios.post('/Documento', docs)
         console.log(data);
         mostrarAlerta({

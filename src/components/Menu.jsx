@@ -18,7 +18,8 @@ const Menu = () => {
         cerrarSesion()
         localStorage.removeItem('username');
         localStorage.removeItem('tipoUsuario');
-        navigate('')
+        navigate('');
+        setNav(false);
     }
 
     const { nav, setNav } = usePerfil(false);
@@ -70,7 +71,7 @@ const Menu = () => {
 
     return (
 
-        <div className={`text-white absolute z-10  position-menu width-menu  bg-sky-950  pl-4 pr-28 py-3 ${nav ? ' transition ease-in-out duration-700 opacity-100  ' : 'opacity-0 hidden '}`} >
+        <div className={`drop-shadow-lg text-white absolute z-10  position-menu width-menu  bg-sky-950  pl-4 pr-28 py-3 ${nav ? ' transition ease-in-out duration-700 opacity-100  ' : 'opacity-0 hidden '}`} >
             <Link to={existe.link}>
                 <div className="flex gap-2 hover:text-sky-500">
                     <div className="w-8 h-8 mt-2 pb-1.5">

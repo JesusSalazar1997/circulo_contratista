@@ -14,7 +14,6 @@ const Campo = ({ data }) => {
     const handleClick = () => {
         if (confirm("¿Estas seguro de eliminar este usuario?")) {
             console.log(usuarioUsername);
-            return
             eliminarUsuario(usuarioUsername, location);
 
         }

@@ -4,6 +4,7 @@ import App from "./App";
 import "./index.css";
 import "./styles/login.css";
 import "./styles/header.css";
+import "./styles/spinner.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>

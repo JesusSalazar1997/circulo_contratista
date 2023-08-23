@@ -25,8 +25,11 @@ const Subcontratista = () => {
     const [CodigoPostal, setCodigoPostal] = useState('');
     const [CodigoObra, setCodigoObra] = useState('');
     const [mensaje, setMensaje] = useState(false);
+    const [valor, setValor] = useState(false);
     const navigate = useNavigate();
     const { mostrarAlerta, alerta, submitPerfil, perfil } = usePerfil();
+
+
 
     useLayoutEffect(() => {
         if (perfil?.id) {
@@ -118,12 +121,12 @@ const Subcontratista = () => {
         } else {
             setMensaje(true)
         }
-    }, [])
 
-    let valor = false;
-    if (JSON.stringify(perfil) != '[]') {
-        valor = true;
-    }
+        if (JSON.stringify(perfil) != '[]') {
+            setValor(true);
+        }
+    }, [perfil])
+
 
 
 
@@ -182,7 +185,7 @@ const Subcontratista = () => {
                 <NavSubcontratista />
             </div>
             <i className="fa fa-drivers-license-o" aria-hidden="true"></i>
-            <div className={`${mensaje ? 'block' : 'hidden'}`}>
+            <div className={`${valor ? 'hidden' : 'block'}`}>
                 <p className={`mt-4 text-xl font-semibold text-center text-red-500`}>No hay información</p>
                 <p className="text-sm text-red-600 text-center">Favor de llenar la información y subir la documentación</p>
             </div>

@@ -3,8 +3,10 @@ import image from "../../public/img/logo.png";
 import log from "../../public/img/12.svg";
 import sec from "../../public/img/13.svg";
 import { Link } from 'react-router-dom';
-import Alerta from "../components/Alerta";
+import Alerta from "../components/Alerta"
+import Loading from "../components/loading/Loading";
 import useAuth from "../hooks/useAuth";
+import usePerfil from "../hooks/usePerfil";
 import clienteAxios from "../../config/clienteAxios";
 
 const Login = () => {
@@ -13,7 +15,8 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [alerta, setAlerta] = useState({});
 
-  const { setAuth, auth } = useAuth();
+  const { setAuth } = useAuth();
+  const { loading, setLoading } = usePerfil();
 
 
   const handleSubmit = async e => {
@@ -30,8 +33,12 @@ const Login = () => {
     try {
       const { data } = await clienteAxios.post(`/Usuario/validarCredenciales`, { username, password })
       setAuth(data.tipoUsuario);
+      setLoading(true)
       localStorage.setItem("username", data.username);
       localStorage.setItem("tipoUsuario", data.tipoUsuario);
+      setTimeout(() => {
+        setLoading(false)
+      }, 2000);
     } catch (error) {
       setAlerta({ msg: 'El usuario no existe o la contraseña es incorrecta', error: true });
       setTimeout(() => {
@@ -49,6 +56,7 @@ const Login = () => {
 
   return (
     <>
+      {<Loading load={loading} />}
       <div className=" max-h-max flex xl:ml-64 flex-col md:flex-row items-center">
         <div className=" max-w-xs max-h-xs sm:max-w-sm sm:max-h-sm md:border-r-4 md:border-r-white-500">
           <img className="w-auto h-auto md:w-full md:h-full" src={image} alt="Imagen Logo" />

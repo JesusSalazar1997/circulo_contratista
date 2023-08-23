@@ -1,30 +1,31 @@
-import { useState, useEffect, createContext } from "react";
+import { useState, useLayoutEffect, createContext } from "react";
 import clienteAxios from "../../config/clienteAxios";
 import { useNavigate } from "react-router-dom";
 
 const PerfilContext = createContext();
 
 const PerfilProvider = ({ children }) => {
-    const [perfil, setPerfil] = useState([])
+
+    const username = localStorage.getItem('username');
+    const [perfil, setPerfil] = useState([]);
     const [obras, setObras] = useState([]);
     const [data, setData] = useState([]);
     const [nav, setNav] = useState(false);
     const [alerta, setAlerta] = useState([]);
+    const [loading, setLoading] = useState(false);
     const [dataContAdm, setdataContAdm] = useState({})
     const [contratista, setContratista] = useState('');
 
 
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const username = localStorage.getItem('username');
+    useLayoutEffect(() => {
         const obtenerInformación = async () => {
             try {
                 if (!username || username == "administrador@mail.com") {
                     return;
                 } else {
                     const { data } = await clienteAxios(`/Contratista/${username}`)
-                    // console.log(data);
                     setPerfil(data)
                 }
             } catch (error) {
@@ -48,7 +49,7 @@ const PerfilProvider = ({ children }) => {
             }
         };
         obtenerObras();
-    }, [])
+    }, [username])
 
 
 
@@ -56,6 +57,13 @@ const PerfilProvider = ({ children }) => {
         setAlerta(alerta)
         setTimeout(() => {
             setAlerta({})
+        }, 4000);
+    }
+
+    const mostrarLoading = load => {
+        setLoading(load)
+        setTimeout(() => {
+            setLoading(false)
         }, 3000);
     }
 
@@ -147,6 +155,9 @@ const PerfilProvider = ({ children }) => {
                 mostrarAlerta,
                 alerta,
                 setAlerta,
+                mostrarLoading,
+                loading,
+                setLoading,
                 submitPerfil,
                 perfil,
                 obras,

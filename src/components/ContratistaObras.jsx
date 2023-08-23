@@ -39,7 +39,7 @@ const ContratistaObras = () => {
             }
         };
         obtenerDocumentacion();
-    }, [])
+    }, [obras])
 
     let documentacion = documentos;
 
@@ -74,7 +74,7 @@ const ContratistaObras = () => {
                     documentacion?.map((doc, index) => (
                         <div key={index} className="flex justify-between mt-2">
                             <p>{doc?.nombre}{doc?.extension}</p>
-                            <a className="hover:bg-green-700 bg-green-600 rounded-md px-4 py-2 text-white font-semibold uppercase text-sm" href={`data:application/octet-stream;base64,${doc.content}`} download={`${doc.nombre}` + `${doc.extension}`}>Descargar</a>
+                            <a className={`hover:bg-green-700 bg-green-600 rounded-md px-4 py-2 text-white font-semibold uppercase text-sm  ${valor ? 'hidden' : 'display'}`} href={`data:application/octet-stream;base64,${doc.content}`} download={`${doc.nombre}` + `${doc.extension}`}>Descargar</a>
                         </div>
                     ))}
                 <div className={`w-full justify-center ${valor ? 'hidden' : 'display'}`}>

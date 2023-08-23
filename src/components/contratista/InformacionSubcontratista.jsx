@@ -25,7 +25,6 @@ const InformacionSubcontratista = () => {
 
 
     useEffect(() => {
-
         const obtenerDocumentoSubcontratista = async () => {
             try {
                 const username = localStorage.getItem('username')
@@ -40,9 +39,7 @@ const InformacionSubcontratista = () => {
         obtenerDocumentoSubcontratista();
     }, [datos])
 
-
     let documentacion = documentos;
-
 
 
 
@@ -131,14 +128,14 @@ const InformacionSubcontratista = () => {
                 <div className=" bg-white py-4 px-5 h-max rounded-lg">
                     <p className="bg-green-600 text-white font-semibold uppercase text-center mb-4 text-sm">Documentación de Subcontratista</p>
                     {
-                        documentacion?.map((doc) => (
-                            <div key={doc.id} className="flex justify-between mt-2 hover:bg-gray-200">
+                        documentacion?.map((doc, key) => (
+                            <div key={key} className="flex justify-between mt-2 hover:bg-gray-200">
                                 <p className="text-sky-800 font-semibold pt-1 pl-1">{doc.nombre}{doc.extension}</p>
                                 <a className="hover:bg-green-700 bg-green-600 rounded-md px-4 py-2 text-white font-semibold uppercase text-sm" href={`data:application/octet-stream;base64,${doc.content}`} download={`${doc.nombre}` + `${doc.extension}`}>Descargar</a>
                             </div>
                         ))}
                     <div className={`w-full justify-center ${valor ? 'hidden' : 'display'}`}>
-                        <p className="text-center font-semibold text-gray-500" >No hay documentos</p>
+                        <p className="text-center font-semibold text-gray-500 uppercase" >No hay documentos</p>
                     </div>
 
                 </div>

@@ -1,13 +1,11 @@
 import usePerfil from "../hooks/usePerfil";
 import Lista from "../components/contratista/Lista";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Contratista = () => {
 
-    const navigate = useNavigate();
     const { perfil } = usePerfil()
     const construcciones = perfil;
-
 
 
     let valor = false;
@@ -17,9 +15,12 @@ const Contratista = () => {
 
 
 
+
     return (
         <>
-
+            <div className={`mt-3 w-full flex justify-center text-red-600 ${valor ? 'flex' : 'hidden'} `}>
+                <p>Creada la cuenta se deberá subir la información y documentación del contratista</p>
+            </div>
 
             <h1 className="text-xl font-base text-center mt-7 ">Listado Obras</h1>
             <p className="text-center text-3xl font-semibold mb-8">{perfil.nombreRazonSocial}</p>

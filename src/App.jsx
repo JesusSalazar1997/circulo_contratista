@@ -36,15 +36,10 @@ import AdmiDocContrSub from "./components/AdmiDocContrSub";
 import { AuthProvider } from './context/AuthProvider';
 import { PerfilProvider } from './context/PerfilProvider';
 
-import { useState } from "react";
 
 
 
 function App() {
-
-  const username = localStorage.getItem('username');
-  const [tipoUsuario, setTipoUsuario] = useState();
-
 
 
   return (

@@ -4,10 +4,10 @@ const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
 
+    const username = localStorage.getItem('username');
     const [auth, setAuth] = useState()
     const [cargando, setCargando] = useState(true)
     const navigate = useNavigate();
-    const username = localStorage.getItem('username');
     const tipoUsuario = parseInt(localStorage.getItem('tipoUsuario'));
 
     useEffect(() => {
@@ -22,25 +22,26 @@ const AuthProvider = ({ children }) => {
                 navigate("/contratista");
                 setTimeout(() => {
                     setCargando(false)
-                }, 1000);
+                }, 3000);
                 setAuth(username)
             } else if (tipoUsuario === 1) {
                 navigate("/subcontratista");
                 setTimeout(() => {
                     setCargando(false)
-                }, 1000);
+                }, 3000);
                 setAuth(username)
             } else {
                 navigate("/administrador");
                 setTimeout(() => {
                     setCargando(false)
-                }, 1000);
+                }, 3000);
                 setAuth(username)
             }
         }
         autenticarUsuario()
 
     }, [auth])
+
 
 
     const cerrarSesion = () => {

@@ -43,7 +43,7 @@ const Header = () => {
             <div className="flex basis-2/6 gap-4 py-2 justify-center items-center bg-sky-500 cursor-pointer">
                 <p className="text-white font-bold text-center text-lg">{usuario}</p>
                 <button onClick={() => valor()} >
-                    <img className="w-7 h-7 " src={arrow} alt="Imagen Arrow" />
+                    <img className="w-7 h-7 hover:fill " src={arrow} alt="Imagen Arrow" />
                 </button>
                 <Menu />
             </div>
